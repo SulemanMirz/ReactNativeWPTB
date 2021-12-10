@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "ReactNativeWPTB",
+    "slug": "ReactNativeWPTB",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "ReactNativeWPTB"
+}
