@@ -1,0 +1,86 @@
+import Toast from 'react-native-toast-message'
+import React, { Component } from 'react'
+
+const MyContext = React.createContext()
+
+class MyContextProvider extends Component {
+    state = {
+        stage:1,
+        players:[],
+        result:''
+    }
+
+    addPlayerHandler = (name) => {
+        this.setState((prevState,props)=>({
+            players:[
+                ...prevState.players,
+                name
+            ]
+        }))
+    }
+
+    removePlayerHandler = (indx) => {
+        let newArray = this.state.players
+        newArray.splice(indx,1)
+        this.setState({players:newArray})
+        console.log(this.state.players);
+    }
+
+    nextHandler = () => {
+        const {players} = this.state
+
+        if(players.length < 2){
+            Toast.show({
+                type:'error',
+                text1: 'Sorry 👋',
+                text2: 'You need more people',
+                position:'bottom'
+              });
+        } else {
+            this.setState({
+                stage:2
+            },()=>{
+                this.generateLooser()
+            })
+        }
+    }
+
+    generateLooser = () => {
+        const {players} = this.state
+        this.setState({
+            result: players[Math.floor(Math.random()*players.length)]
+        })
+    }
+
+    resetGame = () => {
+        this.setState({
+            stage:1,
+            players:[],
+            result:''
+        })
+    }
+
+    render() {
+        return (
+            <>
+                <MyContext.Provider
+                    value={{
+                        state: this.state,
+                        addPlayer: this.addPlayerHandler,
+                        removePlayer: this.removePlayerHandler,
+                        next: this.nextHandler,
+                        getNewLooser: this.generateLooser,
+                        resetGame: this.resetGame,
+                    }}
+                >
+                    {this.props.children}
+                </MyContext.Provider>
+            </>
+        )
+    }
+}
+
+export {
+    MyContext,
+    MyContextProvider
+} 
